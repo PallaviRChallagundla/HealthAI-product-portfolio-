@@ -1,1 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abridge PM Teardown v2 — Pallavi Challagundla </Abridge product teardown>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;background:#fafaf9;color:#1a1a18;line-height:1.6}
+.page{max-width:800px;margin:0 auto;padding:2rem 1.5rem 5rem}
 
+/* MASTHEAD */
+.mast-kicker{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#888780;font-family:'SF Mono',monospace;margin-bottom:6px}
+.mast-title{font-size:28px;font-weight:700;color:#1a1a18;line-height:1.2;margin-bottom:6px}
+.mast-meta{font-size:12px;color:#888780;margin-bottom:1.25rem;font-family:'SF Mono',monospace}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;letter-spacing:.04em}
+.tf{background:#e1f5ee;color:#085041}
+.ti{background:#e6f1fb;color:#0c447c}
+.to{background:#eeedfe;color:#3c3489}
+.tw{background:#faeeda;color:#633806}
+.ts{background:#f1efe8;color:#5f5e5a;font-family:'SF Mono',monospace}
+hr{border:none;border-top:1px solid #e5e3db;margin:2rem 0}
+
+/* EXEC SUMMARY */
+.exec{background:#1a1a18;border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:2rem}
+.exec-kicker{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#888780;font-family:'SF Mono',monospace;margin-bottom:10px}
+.exec-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px}
+.exec-item:last-child{margin-bottom:0}
+.exec-dot{width:5px;height:5px;border-radius:50%;background:#9FE1CB;margin-top:6px;flex-shrink:0}
+.exec-text{font-size:13.5px;color:#e5e3db;line-height:1.6}
+.exec-text strong{color:#fff}
+.verdict-bar{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #333;display:flex;align-items:center;gap:10px}
+.verdict-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#888780;font-family:'SF Mono',monospace}
+.verdict-text{font-size:13px;color:#9FE1CB;font-weight:600}
+
+/* SECTIONS */
+.sec-kicker{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#888780;font-family:'SF Mono',monospace;margin-bottom:4px;margin-top:2rem}
+.sec-title{font-size:19px;font-weight:700;color:#1a1a18;margin-bottom:.75rem}
+
+/* STAT ROW */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:1rem 0}
+@media(max-width:580px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:#f1efe8;border-radius:10px;padding:11px 13px}
+.stat-n{font-size:21px;font-weight:700;color:#1a1a18}
+.stat-l{font-size:11px;color:#5f5e5a;margin-top:2px;line-height:1.4}
+.stat-s{font-size:10px;color:#888780;font-family:'SF Mono',monospace;margin-top:4px}
+
+/* CARDS */
+.card{background:#fff;border:1px solid #e5e3db;border-radius:12px;padding:1.25rem;margin-bottom:10px}
+.card-title{font-size:13.5px;font-weight:700;color:#1a1a18;margin-bottom:6px}
+.card-body{font-size:13px;color:#5f5e5a;line-height:1.75}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
+@media(max-width:540px){.row2{grid-template-columns:1fr}}
+
+/* FEATURE ROWS */
+.feat{padding:11px 0;border-bottom:1px solid #e5e3db}
+.feat:last-child{border-bottom:none}
+.feat-name{font-size:13.5px;font-weight:700;color:#1a1a18;margin-bottom:4px}
+.feat-body{font-size:13px;color:#5f5e5a;line-height:1.7}
+
+/* KANO */
+.kano{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:1rem 0}
+@media(max-width:560px){.kano{grid-template-columns:1fr}}
+.kc{border-radius:10px;padding:13px}
+.kc.b{background:#f1efe8}.kc.p{background:#e6f1fb}.kc.d{background:#e1f5ee}
+.kc-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;font-family:'SF Mono',monospace}
+.kc.b .kc-head{color:#5f5e5a}.kc.p .kc-head{color:#185fa5}.kc.d .kc-head{color:#0f6e56}
+.kc-sub{font-size:10px;color:#888780;font-style:italic;margin-bottom:8px}
+.kc-item{font-size:12px;background:#fff;border-radius:6px;padding:6px 8px;margin-bottom:5px;line-height:1.5;color:#5f5e5a}
+.kc-item:last-child{margin-bottom:0}
+
+/* CALLOUT BOXES */
+.box-o{border-left:3px solid #7f77dd;border-radius:0 10px 10px 0;background:#eeedfe;padding:12px 16px;margin:12px 0}
+.box-o-lbl{font-size:10px;font-weight:700;font-family:'SF Mono',monospace;text-transform:uppercase;letter-spacing:.07em;color:#534ab7;margin-bottom:5px}
+.box-o-text{font-size:13px;color:#3c3489;line-height:1.7}
+.box-w{border-left:3px solid #ba7517;border-radius:0 10px 10px 0;background:#faeeda;padding:12px 16px;margin:12px 0}
+.box-w-lbl{font-size:10px;font-weight:700;font-family:'SF Mono',monospace;text-transform:uppercase;letter-spacing:.07em;color:#854f0b;margin-bottom:5px}
+.box-w-text{font-size:13px;color:#633806;line-height:1.7}
+
+/* 90-DAY PLAN */
+.plan{background:#fff;border:1.5px solid #1a1a18;border-radius:14px;padding:1.5rem;margin:1.25rem 0}
+.plan-title{font-size:14px;font-weight:700;color:#1a1a18;margin-bottom:1rem}
+.plan-row{display:grid;grid-template-columns:80px 1fr;gap:8px;padding:10px 0;border-bottom:1px solid #e5e3db;align-items:flex-start}
+.plan-row:last-child{border-bottom:none}
+.plan-month{font-size:11px;font-weight:700;font-family:'SF Mono',monospace;color:#888780;padding-top:2px}
+.plan-title2{font-size:13.5px;font-weight:700;color:#1a1a18;margin-bottom:3px}
+.plan-body{font-size:12.5px;color:#5f5e5a;line-height:1.65}
+.plan-metric{display:inline-block;margin-top:5px;font-size:11px;font-weight:600;background:#e1f5ee;color:#085041;padding:2px 9px;border-radius:20px;font-family:'SF Mono',monospace}
+
+/* CITATIONS */
+.cite-list{display:flex;flex-direction:column;gap:8px;margin-top:1rem}
+.cite-row{display:grid;grid-template-columns:28px 1fr;gap:8px}
+.cite-num{font-size:11px;font-family:'SF Mono',monospace;color:#888780;padding-top:2px}
+.cite-detail{font-size:12px;color:#5f5e5a;line-height:1.65}
+
+sup{font-size:10px;color:#888780;font-family:'SF Mono',monospace;margin-left:1px}
+b{font-weight:700}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- MASTHEAD -->
+<div class="mast-kicker">Product Teardown · Health AI Portfolio · March 2026</div>
+<div class="mast-title">Abridge: From Scribe to Revenue Engine</div>
+<div class="mast-meta">By [Your Name] · Frameworks: JTBD (Aakash Gupta) · Kano-for-AI (Dr. Marily Nika)</div>
+<div class="legend">
+  <span class="tag tf">FACT — cited</span>
+  <span class="tag ti">INFERENCE</span>
+  <span class="tag to">MY OPINION</span>
+  <span class="tag tw">DATA GAP</span>
+</div>
+
+<!-- EXEC SUMMARY -->
+<div class="exec">
+  <div class="exec-kicker">Executive summary — PM take</div>
+  <div class="exec-item"><div class="exec-dot"></div><div class="exec-text"><strong>Abridge wins today</strong> on trust (Linked Evidence) and enterprise integration — Best in KLAS two years running.</div></div>
+  <div class="exec-item"><div class="exec-dot"></div><div class="exec-text"><strong>The real buyer is the CFO, not the clinician.</strong> Burnout reduction gets attention. Revenue cycle impact closes deals. Abridge is finally leaning into this — but not fast enough.</div></div>
+  <div class="exec-item"><div class="exec-dot"></div><div class="exec-text"><strong>Biggest risk:</strong> Epic ships "Art for Clinicians" to 42% of US hospitals using its 300M-patient Cosmos dataset. Abridge's documentation moat commoditizes within 24 months if they don't expand the product surface.</div></div>
+  <div class="exec-item"><div class="exec-dot"></div><div class="exec-text"><strong>The right move:</strong> Reposition from "AI scribe" to "conversational revenue engine." Prior auth, coding, billing — all at the point of conversation. The Availity partnership is the right bet. Execute faster.</div></div>
+  <div class="exec-item"><div class="exec-dot"></div><div class="exec-text"><strong>Next frontier:</strong> Real-time clinical decision support during the visit. That's the $50B product. Documentation is just the wedge.</div></div>
+  <div class="verdict-bar">
+    <div class="verdict-label">Verdict</div>
+    <div class="verdict-text">Strong product. Must expand beyond scribing to survive long-term. The window is 18 months.</div>
+  </div>
+</div>
+
+<!-- SECTION 1: PRODUCT -->
+<div class="sec-kicker">Section 01 — The product</div>
+<div class="sec-title">What Abridge actually does</div>
+
+<div class="card">
+  <div class="card-title">The core product</div>
+  <div class="card-body">
+    <span class="tag tf">FACT</span> Ambient AI scribe for enterprise health systems. Listens to clinician–patient conversations, generates a draft clinical note in real time, maps every sentence back to the exact audio that produced it (Linked Evidence), and routes structured data into Epic and 10+ other EHRs. Clinician signs off — Abridge never auto-submits.<sup>[1][2]</sup><br><br>
+    <span class="tag tf">FACT</span> As of 2026, the platform has expanded to include real-time ICD-10/HCC coding suggestions, prior authorization, and billing-ready documentation — all at the point of conversation.<sup>[8]</sup>
+  </div>
+</div>
+
+<div class="row2">
+  <div class="card">
+    <div class="card-title">Scale</div>
+    <div class="card-body">
+      200+ health systems.<sup>[1]</sup> 80M patient conversations projected in 2026.<sup>[1]</sup> Kaiser Permanente: 24,600 physicians across 40 hospitals — the largest generative AI deployment in healthcare.<sup>[2]</sup>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">The one feature that matters most</div>
+    <div class="card-body">
+      <span class="tag to">MY OPINION</span> Linked Evidence is the product. Every competitor generates notes. Only Abridge lets a clinician tap any sentence and hear the exact audio that produced it. This is the answer to "how do I know it's accurate?" — and it's why KLAS scores Abridge #1 two years running.<sup>[13]</sup>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- SECTION 2: USERS -->
+<div class="sec-kicker">Section 02 — Users & market · JTBD lens (Aakash Gupta, aakashg.com)</div>
+<div class="sec-title">Three jobs. Two buyers. One real decision-maker.</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-n">51.9%→38.8%</div>
+    <div class="stat-l">Physician burnout rate before vs. after Abridge</div>
+    <div class="stat-s">[9] Yale SOM, 263 physicians</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">30 min</div>
+    <div class="stat-l">Documentation time saved per clinician per day</div>
+    <div class="stat-s">[10] UW Health RCT — strongest design</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">$1.5T</div>
+    <div class="stat-l">US healthcare administrative cost annually</div>
+    <div class="stat-s">[6] Abridge Series E announcement</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">$2,500</div>
+    <div class="stat-l">Per clinician/year enterprise pricing</div>
+    <div class="stat-s">[2] Sacra Research</div>
+  </div>
+</div>
+
+<div class="box-w">
+  <div class="box-w-lbl">Study quality — read carefully</div>
+  <div class="box-w-text">Burnout figures come from observational studies (Yale: 30-day follow-up) and one pragmatic RCT (UW Health, 7 months — strongest design). Not double-blind RCTs. Use as directional evidence, not clinical proof.</div>
+</div>
+
+<div class="feat">
+  <div class="feat-name">Job 1 — "Let me get home before 9pm"</div>
+  <div class="feat-body"><span class="tag tf">FACT</span> 73% of clinicians in the JAMIA study reported less after-hours documentation time.<sup>[11]</sup> "Pajama time" — charting after hours — is the #1 cited driver of physician burnout. This is who Abridge sells to emotionally. But they don't write the check.</div>
+</div>
+<div class="feat">
+  <div class="feat-name">Job 2 — "Stop the billing team from losing money on my notes"</div>
+  <div class="feat-body"><span class="tag tf">FACT</span> Abridge now generates real-time ICD-10, HCC, and visit diagnosis codes during the conversation. The Availity partnership routes prior auth in real-time — reducing approval timelines from weeks to minutes.<sup>[4][5]</sup><br><br><span class="tag to">MY OPINION</span> This is the real product. Burnout reduction gets attention. Revenue cycle impact closes the deal. A CFO approving a $2,500/clinician/year contract doesn't care about pajama time — they care about billing accuracy and denied claims.</div>
+</div>
+<div class="feat">
+  <div class="feat-name">Job 3 — "Be present with my patient again"</div>
+  <div class="feat-body"><span class="tag tf">FACT</span> WVU Medicine: 78% increase in "undivided patient attention" across 2,800 clinicians.<sup>[5]</sup> <span class="tag tw">DATA GAP</span> Self-reported perception metric, not observed behavior. Use carefully in interviews.</div>
+</div>
+
+<hr>
+
+<!-- SECTION 3: FEATURES -->
+<div class="sec-kicker">Section 03 — Feature analysis · Kano-for-AI lens (Dr. Marily Nika, AI PM course 2024)</div>
+<div class="sec-title">What they have. What's decaying. What's next.</div>
+
+<div class="kano">
+  <div class="kc b">
+    <div class="kc-head">Basic needs</div>
+    <div class="kc-sub">Absence = users leave</div>
+    <div class="kc-item">Medical transcription accuracy</div>
+    <div class="kc-item">Epic integration</div>
+    <div class="kc-item">HIPAA compliance</div>
+    <div class="kc-item">Clinician sign-off gate</div>
+    <div class="kc-item">Mobile (iOS + Android)</div>
+  </div>
+  <div class="kc p">
+    <div class="kc-head">Performance</div>
+    <div class="kc-sub">More = higher satisfaction</div>
+    <div class="kc-item">38s note generation (fastest) <sup>[7]</sup></div>
+    <div class="kc-item">55+ specialties, 28 languages <sup>[6ref]</sup></div>
+    <div class="kc-item">Best in KLAS 2025 + 2026 <sup>[13]</sup></div>
+    <div class="kc-item">EHR breadth: athena, Cerner, eCW <sup>[12]</sup></div>
+    <div class="kc-item">ICD-10 + HCC real-time coding <sup>[8]</sup></div>
+  </div>
+  <div class="kc d">
+    <div class="kc-head">Delighters</div>
+    <div class="kc-sub">Unexpected — drives word-of-mouth</div>
+    <div class="kc-item">Linked Evidence: tap note → exact audio <sup>[5]</sup></div>
+    <div class="kc-item">Note generated during (not after) visit <sup>[4]</sup></div>
+    <div class="kc-item">Real-time prior auth at point of care <sup>[4]</sup></div>
+  </div>
+</div>
+
+<div class="box-o">
+  <div class="box-o-lbl">Kano decay risk — my take</div>
+  <div class="box-o-text">Linked Evidence is a Delighter today. It becomes a Basic Need within 18 months as DAX and Ambience copy it. Abridge's roadmap must move upstream — real-time clinical decision support is the next Delighter. "The patient mentioned chest pain — consider ordering a troponin" is a fundamentally different product from a scribe. That's where the defensible moat lives.</div>
+</div>
+
+<hr>
+
+<!-- SECTION 4: COMPETITION -->
+<div class="sec-kicker">Section 04 — Competitive position</div>
+<div class="sec-title">The real threat isn't DAX. It's Epic.</div>
+
+<div class="row2">
+  <div class="card">
+    <div class="card-title">Microsoft Dragon Copilot (DAX)</div>
+    <div class="card-body">
+      <span class="tag tf">FACT</span> 33% market share vs Abridge's 30%.<sup>[14]</sup> An RCT across 238 physicians (UCLA, Nov 2024–Jan 2025) found DAX reduced documentation time but showed mixed burnout results.<sup>[15]</sup><br><br>
+      <span class="tag to">MY OPINION</span> DAX wins via Azure procurement relationships, not product quality. Abridge beats them on every independent quality measure. The risk is enterprise IT teams bundling DAX with existing Microsoft contracts. That's a distribution problem, not a product problem.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Ambience Healthcare</div>
+    <div class="card-body">
+      <span class="tag tf">FACT</span> $243M Series C (Jul 2025), $1.25B valuation. Backed by a16z, Kleiner Perkins, OpenAI Startup Fund. 100+ specialties vs Abridge's 55+. Includes native ICD-10/CPT coding.<sup>[8]</sup><br><br>
+      <span class="tag to">MY OPINION</span> Ambience is the most dangerous direct competitor — not DAX. The OpenAI Startup Fund backing is a signal about model quality trajectory. Watch closely.
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border-color:#e24b4a;border-width:1.5px">
+  <div class="card-title" style="color:#a32d2d">The existential risk: Epic "Art for Clinicians"</div>
+  <div class="card-body">
+    <span class="tag tf">FACT</span> Epic launched its own ambient scribe at 2025 UGM. Epic serves 42% of US hospitals with a 300M-patient Cosmos dataset and a native EHR integration advantage no startup can replicate.<sup>[8]</sup><br><br>
+    <span class="tag tw">DATA GAP</span> No independent outcome data on Art for Clinicians as of March 2026.<br><br>
+    <span class="tag to">MY OPINION</span> Epic entering is not a risk to monitor — it's a timer. Abridge has 18–24 months before Epic's distribution advantage overwhelms any product quality gap. The Pal partnership that made Abridge is now Abridge's ceiling. They must build workflows Epic cannot own — cross-payer revenue cycle intelligence being the clearest candidate.
+  </div>
+</div>
+
+<hr>
+
+<!-- SECTION 5: 90-DAY PLAN -->
+<div class="sec-kicker">Section 05 — Execution</div>
+<div class="sec-title">If I were PM: first 90 days</div>
+
+<div class="plan">
+  <div class="plan-title">90-day PM plan — repositioning Abridge from scribe to revenue engine</div>
+
+  <div class="plan-row">
+    <div class="plan-month">Days 1–30</div>
+    <div>
+      <div class="plan-title2">Audit revenue cycle adoption gap</div>
+      <div class="plan-body">Prior auth and ICD-10 coding features exist — but what % of deployed clinicians actually use them? Pull activation data by feature, health system, and specialty. My hypothesis: adoption of revenue cycle features is under 20% at existing accounts. That's the gap to close before selling to new ones.</div>
+      <div class="plan-metric">Metric: revenue feature activation rate by account</div>
+    </div>
+  </div>
+
+  <div class="plan-row">
+    <div class="plan-month">Days 31–60</div>
+    <div>
+      <div class="plan-title2">Run a billing accuracy pilot with 2 health systems</div>
+      <div class="plan-body">Identify 2 enterprise accounts with active finance teams. Instrument Abridge's ICD-10 suggestions vs baseline coding accuracy. Measure: claim denial rate, HCC capture rate, days-to-reimbursement. This generates the CFO-facing case study that every enterprise sales conversation needs but doesn't have yet.</div>
+      <div class="plan-metric">Metric: claim denial rate reduction %, days-to-reimbursement delta</div>
+    </div>
+  </div>
+
+  <div class="plan-row">
+    <div class="plan-month">Days 61–90</div>
+    <div>
+      <div class="plan-title2">Reposition one sales motion: "scribe" → "revenue engine"</div>
+      <div class="plan-body">Use pilot data to build a CFO-ready ROI calculator. Reframe the AE pitch: lead with billing lift and denied claims recovered, not clinician burnout. Burnout gets you a CMO meeting. Revenue cycle gets you a signed contract. Test in 3 enterprise deals — measure win rate vs. control group of "burnout-first" pitches.</div>
+      <div class="plan-metric">Metric: deal win rate (new pitch vs. control)</div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- SECTION 6: KEY GAPS -->
+<div class="sec-kicker">Section 06 — Gaps</div>
+<div class="sec-title">What's missing</div>
+
+<div class="feat">
+  <div class="feat-name"><span class="tag to">MY OPINION</span> &nbsp;No small practice product</div>
+  <div class="feat-body">Burnout is worst in independent practices. Abridge has no self-serve or sub-enterprise tier. The athenahealth partnership is the right distribution bet — but there's no product designed for a solo internist. Freemium with a usage cap would create a bottom-up enterprise motion and collect diversity of specialty data.</div>
+</div>
+<div class="feat">
+  <div class="feat-name"><span class="tag to">MY OPINION</span> &nbsp;No real-time clinical decision support</div>
+  <div class="feat-body">Abridge listens and documents. It doesn't yet say "patient mentioned chest tightness — consider troponin." That feature is regulatory-complex (510(k) territory) but it's the leap from $5B to $50B. Every year they wait, a better-funded competitor files first.</div>
+</div>
+<div class="feat">
+  <div class="feat-name"><span class="tag ti">INFERENCE</span> &nbsp;Epic dependency is a strategic ceiling</div>
+  <div class="feat-body">The "first Pal" partnership gave Abridge its distribution. It also means Epic can change the terms. Deep Cerner and eClinicalWorks integration is the de-risking move — and it's happening too slowly.<sup>[8]</sup></div>
+</div>
+
+<hr>
+
+<!-- CITATIONS -->
+<div class="sec-kicker">Section 07 — Sources</div>
+<div class="sec-title">All citations</div>
+
+<div class="cite-list">
+  <div class="cite-row"><div class="cite-num">[1]</div><div class="cite-detail">Abridge + Availity press release, abridge.com/press-release/abridge-availity-collaboration-announcement, Jan 12 2026 <span class="tag ts">primary</span></div></div>
+  <div class="cite-row"><div class="cite-num">[2]</div><div class="cite-detail">Sacra Research, "Abridge revenue, valuation & funding," sacra.com/c/abridge, Jan 2026 <span class="tag ts">analyst</span></div></div>
+  <div class="cite-row"><div class="cite-num">[3]</div><div class="cite-detail">Mack A., TechCrunch, "Abridge doubles valuation to $5.3B," Jun 24 2025 <span class="tag ts">news</span></div></div>
+  <div class="cite-row"><div class="cite-num">[4]</div><div class="cite-detail">Healthcare Finance News, "Abridge and Availity partner for real-time prior authorization," healthcarefinancenews.com, 2026 <span class="tag ts">news</span></div></div>
+  <div class="cite-row"><div class="cite-num">[5]</div><div class="cite-detail">EquityZen, "Abridge company profile and expansion notes," equityzen.com/company/abridged1a4 — cites WVU and Highmark Health data <span class="tag ts">secondary</span></div></div>
+  <div class="cite-row"><div class="cite-num">[6]</div><div class="cite-detail">HLTH.com, "Abridge Secures $300M to Transform Clinical Documentation and Revenue Cycle Management," Jun 25 2025 — $1.5T admin cost figure <span class="tag ts">announcement</span></div></div>
+  <div class="cite-row"><div class="cite-num">[7]</div><div class="cite-detail">Shah SJ et al., medRxiv, "Enhancing Clinical Documentation Workflow with Ambient AI," medrxiv.org/content/10.1101/2024.08.12.24311883v2, Aug 2024 <span class="tag ts">preprint</span></div></div>
+  <div class="cite-row"><div class="cite-num">[8]</div><div class="cite-detail">Contrary Research, "Abridge Business Breakdown," research.contrary.com/company/abridge — Epic Pal, Cosmos dataset, Ambience data <span class="tag ts">analyst</span></div></div>
+  <div class="cite-row"><div class="cite-num">[9]</div><div class="cite-detail">Yale School of Medicine, "AI Scribes Reduce Physician Burnout," medicine.yale.edu, 2025. 263 physicians, 6 health systems, 30-day follow-up <span class="tag ts">observational study</span></div></div>
+  <div class="cite-row"><div class="cite-num">[10]</div><div class="cite-detail">UW School of Medicine, "Studies find AI technology aids efficiency," med.wisc.edu, Dec 12 2025. Pragmatic RCT, Aug 2024–Mar 2025 <span class="tag ts">strongest design in teardown</span></div></div>
+  <div class="cite-row"><div class="cite-num">[11]</div><div class="cite-detail">Shah SJ et al., JAMIA, Feb 2025, Vol 32(2):375–380. KUMC, ~100 clinicians <span class="tag ts">peer-reviewed</span></div></div>
+  <div class="cite-row"><div class="cite-num">[12]</div><div class="cite-detail">Fierce Healthcare, "Athenahealth rolls out Abridge AI scribe," Mar 4 2025 <span class="tag ts">news</span></div></div>
+  <div class="cite-row"><div class="cite-num">[13]</div><div class="cite-detail">KLAS Research, Best in KLAS 2025 & 2026, Ambient AI category <span class="tag ts">independent research</span></div></div>
+  <div class="cite-row"><div class="cite-num">[14]</div><div class="cite-detail">Menlo Ventures, "2025 State of Health AI Report" — ambient scribe market share <span class="tag ts">VC research</span></div></div>
+  <div class="cite-row"><div class="cite-num">[15]</div><div class="cite-detail">PMC / UCLA RCT, "A Randomized-Clinical Trial of Two Ambient AI Scribes," pmc.ncbi.nlm.nih.gov/articles/PMC12265753, 238 physicians, Nov 2024–Jan 2025 <span class="tag ts">peer-reviewed RCT</span></div></div>
+</div>
+
+</div>
+</body>
+</html>
